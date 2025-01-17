@@ -21,11 +21,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
-        ValidIssuer = builder.Configuration["AppSettings:Issuer"],
+        ValidIssuer = Environment.GetEnvironmentVariable("ISSUER")!,
         ValidateAudience = true,
-        ValidAudience = builder.Configuration["AppSettings:Audience"],
+        ValidAudience = Environment.GetEnvironmentVariable("AUDIENCE")!,
         ValidateLifetime = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["AppSettings:Token"]!)),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("TOKEN")!)),
         ValidateIssuerSigningKey = true
     };
 });

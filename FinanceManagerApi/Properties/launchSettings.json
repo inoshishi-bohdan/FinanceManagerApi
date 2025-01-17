@@ -16,7 +16,10 @@
       "launchBrowser": false,
       "applicationUrl": "https://localhost:7209;http://localhost:5045",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "TOKEN": "cd48086b853d843e3c818d408b713eacfcc3b1b344816bbcfaee2478f63c73a0a405721ff77c83250fe3730371c906b31c440aee7b055bd1c75a06f92096213c",
+        "ISSUER": "LocalTest",
+        "AUDIENCE": "LocalTestAudience"
       }
     }
   }
