@@ -11,7 +11,7 @@ using System.Text;
 
 namespace FinanceManagerApi.Services
 {
-    public class AuthService(FinanceManagerDbContext context, IConfiguration configuration) : IAuthService
+    public class AuthService(FinanceManagerDbContext context) : IAuthService
     {
         public async Task<TokenResponseDto?> LoginAsync(UserDto request)
         {

@@ -32,14 +32,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-    app.MapOpenApi();
-    app.MapScalarApiReference();
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Finance Manager API"); // Customize Swagger UI
+    c.RoutePrefix = "swagger"; // Access Swagger UI at /swagger
+});
+app.MapOpenApi();
+app.MapScalarApiReference();
 
 app.UseHttpsRedirection();
 
