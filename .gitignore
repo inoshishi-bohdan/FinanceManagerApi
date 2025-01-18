@@ -362,3 +362,8 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /FinanceManagerApi/appsettings.Development.json
+/FinanceManagerApi/Properties/ServiceDependencies/FinanceManagerApi - Web Deploy
+/FinanceManagerApi/Properties/serviceDependencies.FinanceManagerApi - Web Deploy.json
+/FinanceManagerApi/Properties/serviceDependencies.json
+/FinanceManagerApi/Properties/serviceDependencies.local.json
+/FinanceManagerApi/.config/dotnet-tools.json
