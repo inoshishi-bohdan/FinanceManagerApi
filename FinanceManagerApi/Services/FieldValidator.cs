@@ -36,9 +36,20 @@ namespace FinanceManagerApi.Services
             var value = propertySelector.Compile().Invoke(_request);
 
             var propertyInfo = Helpers.GetPropertyInfo(propertySelector);
-            if (value == null)
+
+            if (propertyInfo.PropertyType == typeof(string))
             {
-                AddErrorFieldIsRequired(propertyInfo);
+                if (value == null || string.IsNullOrWhiteSpace((value as string)))
+                {
+                    AddErrorFieldIsRequired(propertyInfo);
+                }
+            }
+            else
+            {
+                if (value == null)
+                {
+                    AddErrorFieldIsRequired(propertyInfo);
+                }
             }
 
             return this;
