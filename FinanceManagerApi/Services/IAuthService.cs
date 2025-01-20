@@ -1,5 +1,5 @@
 ﻿using FinanceManagerApi.Entities;
-using FinanceManagerApi.Models;
+using FinanceManagerApi.Models.Auth;
 
 namespace FinanceManagerApi.Services
 {

@@ -1,4 +1,4 @@
-﻿namespace FinanceManagerApi.Models
+﻿namespace FinanceManagerApi.Models.Auth
 {
     public class UserDto
     {

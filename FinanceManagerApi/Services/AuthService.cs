@@ -1,6 +1,6 @@
 ﻿using FinanceManagerApi.Data;
 using FinanceManagerApi.Entities;
-using FinanceManagerApi.Models;
+using FinanceManagerApi.Models.Auth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
