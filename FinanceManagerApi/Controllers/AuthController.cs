@@ -1,5 +1,5 @@
 ﻿using FinanceManagerApi.Entities;
-using FinanceManagerApi.Models;
+using FinanceManagerApi.Models.Auth;
 using FinanceManagerApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,8 +11,10 @@ namespace FinanceManagerApi.Controllers
     {
         public static User user = new();
 
-        //check difference between ActionResult and IActionResult
+        
         [HttpPost("register")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<User>> Register(UserDto request)
         {
             var user = await authService.RegisterAsync(request);
@@ -26,6 +28,8 @@ namespace FinanceManagerApi.Controllers
         }
 
         [HttpPost("login")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<TokenResponseDto>> Login(UserDto request)
         {
             var response = await authService.LoginAsync(request);
@@ -39,6 +43,8 @@ namespace FinanceManagerApi.Controllers
         }
 
         [HttpPost("refreshToken")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<TokenResponseDto>> RefreshToken(RefreshTokenRequestDto request)
         {
             var response = await authService.RefreshTokensAsync(request);
