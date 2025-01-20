@@ -41,7 +41,7 @@ namespace FinanceManagerApi.Data
 
                 entity.HasOne(d => d.User).WithMany(p => p.Expenses)
                     .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Expenses_Users");
             });
 
@@ -69,7 +69,7 @@ namespace FinanceManagerApi.Data
 
                 entity.HasOne(d => d.User).WithMany(p => p.Incomes)
                     .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Incomes_Users");
             });
 
