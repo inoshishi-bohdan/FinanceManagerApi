@@ -17,6 +17,15 @@ namespace FinanceManagerApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<User>> Register(UserDto request)
         {
+            var validator = FieldValidator.Create(request);
+
+            validator
+                .FieldIsRequired(x => x.UserName)
+                .FieldIsRequired(x => x.Password);
+
+            //check if request parameters is not null or missing
+            if (validator.Any()) return validator.BadRequest();
+
             var user = await authService.RegisterAsync(request);
 
             if (user == null)
@@ -32,6 +41,15 @@ namespace FinanceManagerApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<TokenResponseDto>> Login(UserDto request)
         {
+            var validator = FieldValidator.Create(request);
+
+            validator
+                .FieldIsRequired(x => x.UserName)
+                .FieldIsRequired(x => x.Password);
+
+            //check if request parameters is not null or missing
+            if (validator.Any()) return validator.BadRequest();
+
             var response = await authService.LoginAsync(request);
 
             if (response == null) 
@@ -47,6 +65,15 @@ namespace FinanceManagerApi.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<TokenResponseDto>> RefreshToken(RefreshTokenRequestDto request)
         {
+            var validator = FieldValidator.Create(request);
+
+            validator
+                .FieldIsRequired(x => x.UserId)
+                .FieldIsRequired(x => x.RefreshToken);
+
+            //check if request parameters is not null or missing
+            if (validator.Any()) return validator.BadRequest();
+
             var response = await authService.RefreshTokensAsync(request);
 
             if (response == null || response.AccessToken == null || response.RefreshToken == null) 

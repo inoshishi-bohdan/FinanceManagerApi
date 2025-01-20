@@ -15,14 +15,14 @@ namespace FinanceManagerApi.Services
     {
         public async Task<TokenResponseDto?> LoginAsync(UserDto request)
         {
-            var user = await context.Users.AsQueryable().FirstOrDefaultAsync(user => user.UserName == request.UserName.ToLower());
+            var user = await context.Users.AsQueryable().FirstOrDefaultAsync(user => user.UserName == request.UserName!.ToLower());
 
             if (user == null)
             {
                 return null;
             }
 
-            if (new PasswordHasher<User>().VerifyHashedPassword(user, user.PasswordHash, request.Password) == PasswordVerificationResult.Failed)
+            if (new PasswordHasher<User>().VerifyHashedPassword(user, user.PasswordHash, request.Password!) == PasswordVerificationResult.Failed)
             {
                 return null;
             }
@@ -32,14 +32,14 @@ namespace FinanceManagerApi.Services
 
         public async Task<User?> RegisterAsync(UserDto request)
         {
-            if (await context.Users.AsQueryable().AnyAsync(user => user.UserName == request.UserName.ToLower()))
+            if (await context.Users.AsQueryable().AnyAsync(user => user.UserName == request.UserName!.ToLower()))
             {
                 return null;
             }
 
             var user = new User();
-            var hashedPassword =  new PasswordHasher<User>().HashPassword(user, request.Password);
-            user.UserName = request.UserName.ToLower();
+            var hashedPassword =  new PasswordHasher<User>().HashPassword(user, request.Password!);
+            user.UserName = request.UserName!.ToLower();
             user.PasswordHash = hashedPassword;
             context.Users.Add(user);
             await context.SaveChangesAsync();
@@ -105,7 +105,7 @@ namespace FinanceManagerApi.Services
 
         public async Task<TokenResponseDto?> RefreshTokensAsync(RefreshTokenRequestDto request)
         {
-            var user = await ValidateRefreshTokenAsync(request.UserId, request.RefreshToken);
+            var user = await ValidateRefreshTokenAsync((int)request.UserId!, request.RefreshToken!);
 
             if (user == null) 
             {
