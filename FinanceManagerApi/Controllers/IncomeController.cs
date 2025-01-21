@@ -11,13 +11,13 @@ namespace FinanceManagerApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class IncomeController(IUserService userService, FinanceManagerDbContext dbContext) : ControllerBase
     {
         [HttpGet("getMyIncomes")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [Authorize]
         public async Task<ActionResult<List<IncomeDto>>> GetMyIncomes()
         {
             var myId = userService.GetMyId();
@@ -47,7 +47,6 @@ namespace FinanceManagerApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [Authorize]
         public async Task<ActionResult<IncomeDto>> CreateIncome(CreateRequestDto request)
         {
             var validator = FieldValidator.Create(request);
@@ -126,7 +125,6 @@ namespace FinanceManagerApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [Authorize]
         public async Task<ActionResult<IncomeDto>> UpdateIncome(int id, UpdateRequestDto request)
         {
             var validator = FieldValidator.Create(request);
@@ -208,7 +206,6 @@ namespace FinanceManagerApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [Authorize]
         public async Task<ActionResult<string>> DeleteIncome(int id)
         {
             var myId = userService.GetMyId();
