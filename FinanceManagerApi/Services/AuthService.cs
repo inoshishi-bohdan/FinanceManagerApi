@@ -60,7 +60,7 @@ namespace FinanceManagerApi.Services
                 issuer: Environment.GetEnvironmentVariable("ISSUER")!,
                 audience: Environment.GetEnvironmentVariable("AUDIENCE"),
                 claims: claims,
-                expires: DateTime.UtcNow.AddDays(1),
+                expires: DateTime.UtcNow.AddMinutes(15),
                 signingCredentials: creds
                 );
 
