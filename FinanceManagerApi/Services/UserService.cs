@@ -12,14 +12,14 @@ namespace FinanceManagerApi.Services
         }
         public int? GetMyId()
         {
-            var claimValue = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var claimValue = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if (claimValue == null)
+            if (claimValue == null || !Int32.TryParse(claimValue, out int result))
             {
                 return null;
             }
 
-            return Int32.Parse(claimValue);
+            return result;
         }
     }
 }
