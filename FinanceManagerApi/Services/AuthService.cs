@@ -1,6 +1,8 @@
 ﻿using FinanceManagerApi.Data;
 using FinanceManagerApi.Entities;
+using FinanceManagerApi.Extensions;
 using FinanceManagerApi.Models.Auth;
+using FinanceManagerApi.Models.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -8,14 +10,15 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace FinanceManagerApi.Services
 {
     public class AuthService(FinanceManagerDbContext context) : IAuthService
     {
-        public async Task<TokenResponseDto?> LoginAsync(UserDto request)
+        public async Task<TokenResponseDto?> LoginAsync(LoginRequestDto request)
         {
-            var user = await context.Users.AsQueryable().FirstOrDefaultAsync(user => user.UserName == request.UserName!.ToLower());
+            var user = await context.Users.AsQueryable().FirstOrDefaultAsync(user => user.Email == request.Email!.ToLower());
 
             if (user == null)
             {
@@ -30,21 +33,23 @@ namespace FinanceManagerApi.Services
             return await CreateTokenResponse(user); ;
         }
 
-        public async Task<User?> RegisterAsync(UserDto request)
+        public async Task<UserDto?> RegisterAsync(RegisterRequestDto request)
         {
-            if (await context.Users.AsQueryable().AnyAsync(user => user.UserName == request.UserName!.ToLower()))
+            if (await context.Users.AsQueryable().AnyAsync(user => user.Email == request.Email!.ToLower()))
             {
                 return null;
             }
 
             var user = new User();
             var hashedPassword =  new PasswordHasher<User>().HashPassword(user, request.Password!);
-            user.UserName = request.UserName!.ToLower();
+            user.UserName = request.UserName!;
+            user.Email = request.Email!.ToLower();
             user.PasswordHash = hashedPassword;
+            user.ProfileImageId = 1;
             context.Users.Add(user);
             await context.SaveChangesAsync();
 
-            return user;
+            return user.ToUserDto();
         }
 
         private string CreateToken(User user)
@@ -113,6 +118,20 @@ namespace FinanceManagerApi.Services
             }
 
             return await CreateTokenResponse(user);
+        }
+
+        public bool IsValidEmail(string email)
+        {
+            try
+            {
+                string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+
+                return Regex.IsMatch(email, pattern, RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
+            }
+            catch (RegexMatchTimeoutException)
+            {
+                return false; 
+            }
         }
     }
 }

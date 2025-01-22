@@ -1,12 +1,13 @@
-﻿using FinanceManagerApi.Entities;
-using FinanceManagerApi.Models.Auth;
+﻿using FinanceManagerApi.Models.Auth;
+using FinanceManagerApi.Models.User;
 
 namespace FinanceManagerApi.Services
 {
     public interface IAuthService
     {
-        Task<User?> RegisterAsync(UserDto request);
-        Task<TokenResponseDto?> LoginAsync(UserDto request);
+        Task<UserDto?> RegisterAsync(RegisterRequestDto request);
+        Task<TokenResponseDto?> LoginAsync(LoginRequestDto request);
         Task<TokenResponseDto?> RefreshTokensAsync(RefreshTokenRequestDto request);
+        bool IsValidEmail(string email);
     }
 }
