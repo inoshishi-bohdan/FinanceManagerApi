@@ -82,8 +82,9 @@ namespace FinanceManagerApi.Data
             modelBuilder.Entity<User>(entity =>
             {
                 entity.HasKey(e => e.Id).HasName("PK_User"); 
-                entity.HasIndex(e => e.UserName, "UC_Users").IsUnique();
+                entity.HasIndex(e => e.Email, "UC_Users").IsUnique();
                 entity.Property(e => e.UserName).HasMaxLength(100);
+                entity.Property(e => e.Email).HasMaxLength(100);
 
                 entity.HasOne(d => d.ProfileImage).WithMany(p => p.Users)
                     .HasForeignKey(d => d.ProfileImageId)
