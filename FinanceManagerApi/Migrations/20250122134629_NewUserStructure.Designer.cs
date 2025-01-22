@@ -4,6 +4,7 @@ using FinanceManagerApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FinanceManagerApi.Migrations
 {
     [DbContext(typeof(FinanceManagerDbContext))]
-    partial class FinanceManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250122134629_NewUserStructure")]
+    partial class NewUserStructure
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -198,7 +201,7 @@ namespace FinanceManagerApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ProfileImageId")
+                    b.Property<int?>("ProfileImageId")
                         .HasColumnType("int");
 
                     b.Property<string>("RefreshToken")
@@ -284,8 +287,6 @@ namespace FinanceManagerApi.Migrations
                     b.HasOne("FinanceManagerApi.Entities.ProfileImage", "ProfileImage")
                         .WithMany("Users")
                         .HasForeignKey("ProfileImageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
                         .HasConstraintName("FK_Users_ProfileImage");
 
                     b.Navigation("ProfileImage");
