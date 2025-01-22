@@ -21,4 +21,12 @@
 		</PackageReference>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Include="wwwroot\images\profile0.png" />
+	  <None Include="wwwroot\images\profile1.jpg" />
+	  <None Include="wwwroot\images\profile2.jpg" />
+	  <None Include="wwwroot\images\profile3.jpg" />
+	  <None Include="wwwroot\images\profile4.jpg" />
+	</ItemGroup>
+
 </Project>
