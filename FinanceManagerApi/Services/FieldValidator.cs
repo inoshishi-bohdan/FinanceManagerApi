@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace FinanceManagerApi.Services
 {
@@ -55,9 +56,66 @@ namespace FinanceManagerApi.Services
             return this;
         }
 
+        public FieldValidator<TSource> FieldHasMaxLength(Expression<Func<TSource, string?>> propertySelector, int maxLength)
+        {
+            var value = propertySelector.Compile().Invoke(_request);
+
+            var propertyInfo = Helpers.GetPropertyInfo(propertySelector);
+
+            if (value == null || string.IsNullOrWhiteSpace(value))
+            {
+                AddErrorFieldIsRequired(propertyInfo);
+            }
+
+            if (value!.Length > maxLength)
+            {
+                AddErrorFieldHasMaxLength(propertyInfo, maxLength);
+            }
+
+            return this;
+        }
+
+        public FieldValidator<TSource> FieldHasValidEmailFormat(Expression<Func<TSource, string?>> propertySelector)
+        {
+            var value = propertySelector.Compile().Invoke(_request);
+
+            var propertyInfo = Helpers.GetPropertyInfo(propertySelector);
+
+            if (value == null || string.IsNullOrWhiteSpace(value))
+            {
+                AddErrorFieldIsRequired(propertyInfo);
+            }
+
+            try
+            {
+                string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+
+                if (!Regex.IsMatch(value!, pattern, RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250)))
+                {
+                    AddErrorFieldHasInvalidEmailFormat(propertyInfo);
+                }
+            }
+            catch (RegexMatchTimeoutException)
+            {
+                AddErrorFieldHasInvalidEmailFormat(propertyInfo);
+            }
+
+            return this;
+        }
+
         private void AddErrorFieldIsRequired(PropertyInfo propertyInfo)
         {
-            _validationErrors.Add($"Field {propertyInfo.Name} is required");
+            _validationErrors.Add($"Field {propertyInfo.Name} is required.");
+        }
+
+        private void AddErrorFieldHasMaxLength(PropertyInfo propertyInfo, int maxLength)
+        {
+            _validationErrors.Add($"Field {propertyInfo.Name} has max length {maxLength} characters.");
+        }
+
+        private void AddErrorFieldHasInvalidEmailFormat(PropertyInfo propertyInfo)
+        {
+            _validationErrors.Add($"Field {propertyInfo.Name} requires correct email format.");
         }
     }
 }
