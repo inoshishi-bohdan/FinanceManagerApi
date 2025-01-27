@@ -18,6 +18,7 @@ namespace FinanceManagerApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<List<ExpenseDto>>> GetMyExpenses()
         {
             var myId = userService.GetMyId();
@@ -47,6 +48,7 @@ namespace FinanceManagerApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ExpenseDto>> CreateExpense(CreateExpenseRequestDto request)
         {
             var validator = FieldValidator.Create(request);
@@ -125,6 +127,7 @@ namespace FinanceManagerApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ExpenseDto>> UpdateExpense(int id, UpdateExpenseRequestDto request)
         {
             var validator = FieldValidator.Create(request);
@@ -206,6 +209,7 @@ namespace FinanceManagerApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<string>> DeleteExpense(int id)
         {
             var myId = userService.GetMyId();
