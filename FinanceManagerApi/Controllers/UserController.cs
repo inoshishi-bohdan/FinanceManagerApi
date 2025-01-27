@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using FinanceManagerApi.Data;
+﻿using FinanceManagerApi.Data;
 using FinanceManagerApi.Entities;
 using FinanceManagerApi.Extensions;
 using FinanceManagerApi.Models.User;
@@ -14,12 +13,13 @@ namespace FinanceManagerApi.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class UserController(FinanceManagerDbContext dbContext, IUserService userService, IAuthService authService) : ControllerBase
+    public class UserController(FinanceManagerDbContext dbContext, IUserService userService) : ControllerBase
     {
         [HttpPut("updateMyInfo")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<UserDto>> UpdateMyInfo(UpdateUserRequestDto request)
         {
             var validator = FieldValidator.Create(request);
@@ -63,6 +63,8 @@ namespace FinanceManagerApi.Controllers
             user.Email = request.Email!;
             user.PasswordHash = new PasswordHasher<User>().HashPassword(user, request.NewPassword!);
             user.ProfileImageId = request.ProfileImageId;
+            user.RefreshToken = null;
+            user.RefreshTokenExpiryTime = null;
 
             await dbContext.SaveChangesAsync();
 
