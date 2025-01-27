@@ -56,16 +56,10 @@ namespace FinanceManagerApi.Services
             return this;
         }
 
-        public FieldValidator<TSource> FieldHasMaxLength(Expression<Func<TSource, string?>> propertySelector, int maxLength)
+        public FieldValidator<TSource> FieldHasMaxLength(Expression<Func<TSource, string>> propertySelector, int maxLength)
         {
             var value = propertySelector.Compile().Invoke(_request);
-
             var propertyInfo = Helpers.GetPropertyInfo(propertySelector);
-
-            if (value == null || string.IsNullOrWhiteSpace(value))
-            {
-                AddErrorFieldIsRequired(propertyInfo);
-            }
 
             if (value!.Length > maxLength)
             {
@@ -75,16 +69,10 @@ namespace FinanceManagerApi.Services
             return this;
         }
 
-        public FieldValidator<TSource> FieldHasValidEmailFormat(Expression<Func<TSource, string?>> propertySelector)
+        public FieldValidator<TSource> FieldHasValidEmailFormat(Expression<Func<TSource, string>> propertySelector)
         {
             var value = propertySelector.Compile().Invoke(_request);
-
             var propertyInfo = Helpers.GetPropertyInfo(propertySelector);
-
-            if (value == null || string.IsNullOrWhiteSpace(value))
-            {
-                AddErrorFieldIsRequired(propertyInfo);
-            }
 
             try
             {
