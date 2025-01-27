@@ -15,5 +15,15 @@ namespace FinanceManagerApi.Extensions
                 Caption = profileImage.Caption
             }).ToListAsync();
         }
+
+        public static ProfileImageDto ToProfileImageDto(this ProfileImage entry)
+        {
+            return new ProfileImageDto
+            {
+                Id = entry.Id,
+                Path = entry.Path,
+                Caption = entry.Caption
+            };
+        }
     }
 }
