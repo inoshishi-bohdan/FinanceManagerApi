@@ -21,17 +21,12 @@ namespace FinanceManagerApi.Controllers
             var validator = FieldValidator.Create(request);
 
             validator
-                .FieldIsRequired(x => x.UserName)
-                .FieldIsRequired(x => x.Email)
+                .FieldIsRequired(x => x.UserName).FieldHasMaxLength(x => x.UserName, 100)
+                .FieldIsRequired(x => x.Email).FieldHasMaxLength(x => x.Email, 100).FieldHasValidEmailFormat(x => x.Email)
                 .FieldIsRequired(x => x.Password);
 
             //check if request parameters is not null or missing
             if (validator.Any()) return validator.BadRequest();
-
-            if (!authService.IsValidEmail(request.Email!))
-            {
-                return BadRequest("Invalid email format.");
-            }
 
             var user = await authService.RegisterAsync(request);
 
@@ -51,16 +46,11 @@ namespace FinanceManagerApi.Controllers
             var validator = FieldValidator.Create(request);
 
             validator
-                .FieldIsRequired(x => x.Email)
+                .FieldIsRequired(x => x.Email).FieldHasValidEmailFormat(x => x.Email)
                 .FieldIsRequired(x => x.Password);
 
             //check if request parameters is not null or missing
             if (validator.Any()) return validator.BadRequest();
-
-            if (!authService.IsValidEmail(request.Email!))
-            {
-                return BadRequest("Invalid email format.");
-            }
 
             var response = await authService.LoginAsync(request);
 

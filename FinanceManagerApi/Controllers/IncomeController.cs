@@ -52,7 +52,7 @@ namespace FinanceManagerApi.Controllers
             var validator = FieldValidator.Create(request);
 
             validator
-                .FieldIsRequired(x => x.Title)
+                .FieldIsRequired(x => x.Title).FieldHasMaxLength(x => x.Title, 250)
                 .FieldIsRequired(x => x.Date)
                 .FieldIsRequired(x => x.Amount)
                 .FieldIsRequired(x => x.CurrencyId)
@@ -130,7 +130,7 @@ namespace FinanceManagerApi.Controllers
             var validator = FieldValidator.Create(request);
 
             validator
-                .FieldIsRequired(x => x.Title)
+                .FieldIsRequired(x => x.Title).FieldHasMaxLength(x => x.Title, 250)
                 .FieldIsRequired(x => x.Date)
                 .FieldIsRequired(x => x.Amount)
                 .FieldIsRequired(x => x.CurrencyId)
