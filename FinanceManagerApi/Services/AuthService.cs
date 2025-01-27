@@ -41,7 +41,7 @@ namespace FinanceManagerApi.Services
             }
 
             var user = new User();
-            var hashedPassword =  new PasswordHasher<User>().HashPassword(user, request.Password!);
+            var hashedPassword = new PasswordHasher<User>().HashPassword(user, request.Password!);
             user.UserName = request.UserName!;
             user.Email = request.Email!.ToLower();
             user.PasswordHash = hashedPassword;
@@ -112,7 +112,7 @@ namespace FinanceManagerApi.Services
         {
             var user = await ValidateRefreshTokenAsync((int)request.UserId!, request.RefreshToken!);
 
-            if (user == null) 
+            if (user == null)
             {
                 return null;
             }
@@ -130,7 +130,7 @@ namespace FinanceManagerApi.Services
             }
             catch (RegexMatchTimeoutException)
             {
-                return false; 
+                return false;
             }
         }
     }

@@ -30,7 +30,7 @@ namespace FinanceManagerApi.Controllers
             //check if user record exists
             if (!dbContext.Users.Any(user => user.Id == myId))
             {
-                return BadRequest($"User with ID {myId} was not found.");
+                return NotFound($"User with ID {myId} was not found.");
             }
 
             var response = await dbContext.Expenses
@@ -71,7 +71,7 @@ namespace FinanceManagerApi.Controllers
             //check if user record exists
             if (!dbContext.Users.Any(user => user.Id == myId))
             {
-                return BadRequest($"User with ID {myId} was not found.");
+                return NotFound($"User with ID {myId} was not found.");
             }
 
             //check if specified currency is valid
@@ -149,7 +149,7 @@ namespace FinanceManagerApi.Controllers
             //check if user record exists
             if (!dbContext.Users.Any(user => user.Id == myId))
             {
-                return BadRequest($"User with ID {myId} was not found.");
+                return NotFound($"User with ID {myId} was not found.");
             }
 
             //check if specified currency is valid
@@ -218,7 +218,7 @@ namespace FinanceManagerApi.Controllers
             //check if user record exists
             if (!dbContext.Users.Any(user => user.Id == myId))
             {
-                return BadRequest($"User with ID {myId} was not found.");
+                return NotFound($"User with ID {myId} was not found.");
             }
 
             var entry = await dbContext.Expenses
