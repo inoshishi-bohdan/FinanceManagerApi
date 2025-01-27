@@ -70,5 +70,33 @@ namespace FinanceManagerApi.Controllers
 
             return Ok(user.ToUserDto());
         }
+
+        [HttpDelete("deleteMyAccount")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<string>> DeleteMyAccount()
+        {
+            var myId = userService.GetMyId();
+
+            if (myId == null)
+            {
+                return Unauthorized("Couldn't get user id from http context.");
+            }
+
+            var user = await dbContext.Users.AsQueryable().FirstOrDefaultAsync(x => x.Id == myId);
+
+            //check if user record exists
+            if (user == null)
+            {
+                return NotFound($"User with ID {myId} was not found.");
+            }
+
+            dbContext.Users.Remove(user);
+
+            await dbContext.SaveChangesAsync();
+
+            return Ok($"User with ID {user.Id} was successfully deleted.");
+        }
     }
 }
