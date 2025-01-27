@@ -119,19 +119,5 @@ namespace FinanceManagerApi.Services
 
             return await CreateTokenResponse(user);
         }
-
-        public bool IsValidEmail(string email)
-        {
-            try
-            {
-                string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
-
-                return Regex.IsMatch(email, pattern, RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
-            }
-            catch (RegexMatchTimeoutException)
-            {
-                return false;
-            }
-        }
     }
 }
