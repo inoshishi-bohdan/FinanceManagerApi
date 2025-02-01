@@ -43,21 +43,31 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins", builder =>
+    {
+        builder.AllowAnyOrigin() 
+               .AllowAnyMethod() 
+               .AllowAnyHeader(); 
+    });
+});
+
 var app = builder.Build();
 
+app.UseCors("AllowAllOrigins");
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseAuthorization();
+// Swagger after CORS and HTTPS
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Finance Manager API"); // Customize Swagger UI
-    c.RoutePrefix = "swagger"; // Access Swagger UI at /swagger
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Finance Manager API");
+    c.RoutePrefix = "swagger";
 });
 app.MapOpenApi();
 app.MapScalarApiReference();
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-app.UseStaticFiles();
 app.MapControllers();
 
 app.Run();
