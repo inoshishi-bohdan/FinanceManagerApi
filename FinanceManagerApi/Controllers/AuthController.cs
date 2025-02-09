@@ -1,5 +1,6 @@
 ﻿using FinanceManagerApi.Entities;
 using FinanceManagerApi.Models.Auth;
+using FinanceManagerApi.Models.Response;
 using FinanceManagerApi.Models.User;
 using FinanceManagerApi.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +13,10 @@ namespace FinanceManagerApi.Controllers
     {
         public static User user = new();
 
-        
+
         [HttpPost("register")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDto))]
         public async Task<ActionResult<UserDto>> Register(RegisterRequestDto request)
         {
             var validator = FieldValidator.Create(request);
@@ -32,7 +33,7 @@ namespace FinanceManagerApi.Controllers
 
             if (user == null)
             {
-                return BadRequest("Email already exists.");
+                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = new List<string> { "Email already exists" } });
             }
 
             return Ok(user);
@@ -40,7 +41,7 @@ namespace FinanceManagerApi.Controllers
 
         [HttpPost("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDto))]
         public async Task<ActionResult<TokenResponseDto>> Login(LoginRequestDto request)
         {
             var validator = FieldValidator.Create(request);
@@ -54,9 +55,9 @@ namespace FinanceManagerApi.Controllers
 
             var response = await authService.LoginAsync(request);
 
-            if (response == null) 
+            if (response == null)
             {
-                return BadRequest("Invalid email or password.");
+                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = new List<string> { "Invalid email or password" } });
             }
 
             return Ok(response);
@@ -64,7 +65,7 @@ namespace FinanceManagerApi.Controllers
 
         [HttpPost("refreshToken")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(UnauthorizedDto))]
         public async Task<ActionResult<TokenResponseDto>> RefreshToken(RefreshTokenRequestDto request)
         {
             var validator = FieldValidator.Create(request);
@@ -78,9 +79,9 @@ namespace FinanceManagerApi.Controllers
 
             var response = await authService.RefreshTokensAsync(request);
 
-            if (response == null || response.AccessToken == null || response.RefreshToken == null) 
+            if (response == null || response.AccessToken == null || response.RefreshToken == null)
             {
-                return Unauthorized("Invalid refresh token.");
+                return Unauthorized(new UnauthorizedDto { Message = "Invalid refresh token" });
             }
 
             return Ok(response);

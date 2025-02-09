@@ -1,6 +1,7 @@
 ﻿using FinanceManagerApi.Data;
 using FinanceManagerApi.Extensions;
 using FinanceManagerApi.Models.ProfileImage;
+using FinanceManagerApi.Models.Response;
 using FinanceManagerApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,8 +24,8 @@ namespace FinanceManagerApi.Controllers
 
         [HttpGet("getMyProfileImage")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(UnauthorizedDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDto))]
         [Authorize]
         public async Task<ActionResult<ProfileImageDto>> GetMyProfileImage()
         {
@@ -32,7 +33,7 @@ namespace FinanceManagerApi.Controllers
 
             if (myId == null)
             {
-                return Unauthorized("Couldn't get user id from http context.");
+                return Unauthorized(new UnauthorizedDto { Message = "Couldn't get user id from http context" });
             }
 
             var user = await dbContext.Users.AsQueryable().FirstOrDefaultAsync(x => x.Id == myId);
@@ -40,14 +41,14 @@ namespace FinanceManagerApi.Controllers
             //check if user record exists
             if (user == null)
             {
-                return NotFound($"User with ID {myId} was not found.");
+                return NotFound(new NotFoundDto { Message = $"User with ID {myId} was not found" });
             }
 
             var profileImage = await dbContext.ProfileImages.FindAsync(user.ProfileImageId);
 
-            if (profileImage == null) 
+            if (profileImage == null)
             {
-                return NotFound($"Profile image with ID {user.ProfileImageId} was not found.");
+                return NotFound(new NotFoundDto { Message = $"Profile image with ID {user.ProfileImageId} was not found" });
             }
 
             return Ok(profileImage.ToProfileImageDto());

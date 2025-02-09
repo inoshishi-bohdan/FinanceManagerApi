@@ -2,6 +2,7 @@
 using FinanceManagerApi.Entities;
 using FinanceManagerApi.Extensions;
 using FinanceManagerApi.Models.Expense;
+using FinanceManagerApi.Models.Response;
 using FinanceManagerApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,22 +17,21 @@ namespace FinanceManagerApi.Controllers
     {
         [HttpGet("getMyExpenses")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(UnauthorizedDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDto))]
         public async Task<ActionResult<List<ExpenseDto>>> GetMyExpenses()
         {
             var myId = userService.GetMyId();
 
             if (myId == null)
             {
-                return Unauthorized("Couldn't get user id from http context.");
+                return Unauthorized(new UnauthorizedDto { Message = "Couldn't get user id from http context" });
             }
 
             //check if user record exists
             if (!dbContext.Users.Any(user => user.Id == myId))
             {
-                return NotFound($"User with ID {myId} was not found.");
+                return NotFound(new NotFoundDto { Message = $"User with ID {myId} was not found" });
             }
 
             var response = await dbContext.Expenses
@@ -46,9 +46,9 @@ namespace FinanceManagerApi.Controllers
 
         [HttpPost("create")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDto))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(UnauthorizedDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDto))]
         public async Task<ActionResult<ExpenseDto>> CreateExpense(CreateExpenseRequestDto request)
         {
             var validator = FieldValidator.Create(request);
@@ -67,31 +67,31 @@ namespace FinanceManagerApi.Controllers
 
             if (myId == null)
             {
-                return Unauthorized("Couldn't get user id from http context.");
+                return Unauthorized(new UnauthorizedDto { Message = "Couldn't get user id from http context" });
             }
 
             //check if user record exists
             if (!dbContext.Users.Any(user => user.Id == myId))
             {
-                return NotFound($"User with ID {myId} was not found.");
+                return NotFound(new NotFoundDto { Message = $"User with ID {myId} was not found" });
             }
 
             //check if specified currency is valid
             if (!dbContext.Currencies.Any(currency => currency.Id == request.CurrencyId))
             {
-                return BadRequest($"Currency with ID {request.CurrencyId} was not found.");
+                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = new List<string> { $"Currency with ID {request.CurrencyId} was not found" } });
             }
 
             //check if specified expense category is valid 
             if (!dbContext.ExpenseCategories.Any(category => category.Id == request.ExpenseCategoryId))
             {
-                return BadRequest($"Expense category with ID {request.ExpenseCategoryId} was not found.");
+                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = new List<string> { $"Expense category with ID {request.ExpenseCategoryId} was not found" } });
             }
 
             //check if amount is not negative number
             if (request.Amount <= 0)
             {
-                return BadRequest("Amount can not be less of equal to 0.");
+                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = new List<string> { "Amount can not be less of equal to 0" } });
             }
 
             var amount = Math.Round((decimal)request.Amount!, 2, MidpointRounding.AwayFromZero);
@@ -117,7 +117,7 @@ namespace FinanceManagerApi.Controllers
 
             if (entry == null)
             {
-                return BadRequest($"Expense record with ID {newExpense.Id} was not found.");
+                return BadRequest(new BadRequestDto { Message = "Missing record", Errors = new List<string> { $"Expense record with ID {newExpense.Id} was not found" } });
             }
 
             return Ok(entry.ToExpenseDto());
@@ -125,9 +125,9 @@ namespace FinanceManagerApi.Controllers
 
         [HttpPut("update/{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDto))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(UnauthorizedDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDto))]
         public async Task<ActionResult<ExpenseDto>> UpdateExpense(int id, UpdateExpenseRequestDto request)
         {
             var validator = FieldValidator.Create(request);
@@ -146,31 +146,31 @@ namespace FinanceManagerApi.Controllers
 
             if (myId == null)
             {
-                return Unauthorized("Couldn't get user id from http context.");
+                return Unauthorized(new UnauthorizedDto { Message = "Couldn't get user id from http context" });
             }
 
             //check if user record exists
             if (!dbContext.Users.Any(user => user.Id == myId))
             {
-                return NotFound($"User with ID {myId} was not found.");
+                return NotFound(new NotFoundDto { Message = $"User with ID {myId} was not found" });
             }
 
             //check if specified currency is valid
             if (!dbContext.Currencies.Any(currency => currency.Id == request.CurrencyId))
             {
-                return BadRequest($"Currency with ID {request.CurrencyId} was not found.");
+                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = new List<string> { $"Currency with ID {request.CurrencyId} was not found" } });
             }
 
             //check if specified expense category is valid 
             if (!dbContext.ExpenseCategories.Any(category => category.Id == request.ExpenseCategoryId))
             {
-                return BadRequest($"Expense category with ID {request.ExpenseCategoryId} was not found.");
+                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = new List<string> { $"Expense category with ID {request.ExpenseCategoryId} was not found" } });
             }
 
             //check if amount is not negative number
             if (request.Amount <= 0)
             {
-                return BadRequest("Amount can not be less of equal to 0.");
+                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = new List<string> { "Amount can not be less of equal to 0" } });
             }
 
             var amount = Math.Round((decimal)request.Amount!, 2, MidpointRounding.AwayFromZero);
@@ -180,7 +180,7 @@ namespace FinanceManagerApi.Controllers
 
             if (entry == null)
             {
-                return BadRequest($"Expense record with ID {id} was not found.");
+                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = new List<string> { $"Expense record with ID {id} was not found" } });
             }
 
             entry.Title = request.Title!;
@@ -199,7 +199,7 @@ namespace FinanceManagerApi.Controllers
 
             if (entry == null)
             {
-                return BadRequest($"Expense record with ID {id} was not found.");
+                return BadRequest(new BadRequestDto { Message = "Missing record", Errors = new List<string> { $"Expense record with ID {id} was not found" } });
             }
 
             return Ok(entry.ToExpenseDto());
@@ -207,22 +207,22 @@ namespace FinanceManagerApi.Controllers
 
         [HttpDelete("delete/{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDto))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(UnauthorizedDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDto))]
         public async Task<ActionResult<string>> DeleteExpense(int id)
         {
             var myId = userService.GetMyId();
 
             if (myId == null)
             {
-                return Unauthorized("Couldn't get user id from http context.");
+                return Unauthorized(new UnauthorizedDto { Message = "Couldn't get user id from http context" });
             }
 
             //check if user record exists
             if (!dbContext.Users.Any(user => user.Id == myId))
             {
-                return NotFound($"User with ID {myId} was not found.");
+                return NotFound(new NotFoundDto { Message = $"User with ID {myId} was not found" });
             }
 
             var entry = await dbContext.Expenses
@@ -231,7 +231,7 @@ namespace FinanceManagerApi.Controllers
 
             if (entry == null)
             {
-                return BadRequest($"Expense record with ID {id} was not found.");
+                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = new List<string> { $"Expense record with ID {id} was not found" } });
             }
 
             dbContext.Expenses.Remove(entry);

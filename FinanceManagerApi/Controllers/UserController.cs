@@ -1,6 +1,7 @@
 ﻿using FinanceManagerApi.Data;
 using FinanceManagerApi.Entities;
 using FinanceManagerApi.Extensions;
+using FinanceManagerApi.Models.Response;
 using FinanceManagerApi.Models.User;
 using FinanceManagerApi.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -17,9 +18,9 @@ namespace FinanceManagerApi.Controllers
     {
         [HttpPut("updateMyInfo")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDto))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(UnauthorizedDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDto))]
         public async Task<ActionResult<UserDto>> UpdateMyInfo(UpdateUserRequestDto request)
         {
             var validator = FieldValidator.Create(request);
@@ -38,7 +39,7 @@ namespace FinanceManagerApi.Controllers
 
             if (myId == null)
             {
-                return Unauthorized("Couldn't get user id from http context.");
+                return Unauthorized(new UnauthorizedDto { Message = "Couldn't get user id from http context" });
             }
 
             var user = await dbContext.Users.AsQueryable().FirstOrDefaultAsync(x => x.Id == myId);
@@ -46,17 +47,17 @@ namespace FinanceManagerApi.Controllers
             //check if user record exists
             if (user == null)
             {
-                return NotFound($"User with ID {myId} was not found.");
+                return NotFound(new NotFoundDto { Message = $"User with ID {myId} was not found" });
             }
 
             if (new PasswordHasher<User>().VerifyHashedPassword(user, user.PasswordHash, request.OldPassword!) == PasswordVerificationResult.Failed)
             {
-                return BadRequest($"Invalid password.");
+                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = new List<string> { $"Invalid password" } });
             }
 
             if (!dbContext.ProfileImages.Any(profileImage => profileImage.Id == request.ProfileImageId))
             {
-                return BadRequest($"Profile image with ID {request.ProfileImageId} was not found.");
+                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = new List<string> { $"Profile image with ID {request.ProfileImageId} was not found" } });
             }
 
             user.UserName = request.UserName!;
@@ -73,15 +74,15 @@ namespace FinanceManagerApi.Controllers
 
         [HttpDelete("deleteMyAccount")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(UnauthorizedDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDto))]
         public async Task<ActionResult<string>> DeleteMyAccount()
         {
             var myId = userService.GetMyId();
 
             if (myId == null)
             {
-                return Unauthorized("Couldn't get user id from http context.");
+                return Unauthorized(new UnauthorizedDto { Message = "Couldn't get user id from http context" });
             }
 
             var user = await dbContext.Users.AsQueryable().FirstOrDefaultAsync(x => x.Id == myId);
@@ -89,7 +90,7 @@ namespace FinanceManagerApi.Controllers
             //check if user record exists
             if (user == null)
             {
-                return NotFound($"User with ID {myId} was not found.");
+                return NotFound(new NotFoundDto { Message = $"User with ID {myId} was not found" });
             }
 
             dbContext.Users.Remove(user);
