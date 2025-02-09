@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.FileSystemGlobbing.Internal;
+﻿using FinanceManagerApi.Models.Response;
+using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -29,7 +29,7 @@ namespace FinanceManagerApi.Services
 
         public BadRequestObjectResult BadRequest()
         {
-            return new BadRequestObjectResult(string.Join("\n", _validationErrors.ToList()));
+            return new BadRequestObjectResult(new BadRequestDto { Message= "Missing parameters", Errors = _validationErrors });
         }
 
 
@@ -42,7 +42,7 @@ namespace FinanceManagerApi.Services
             {
                 if (value == null || string.IsNullOrWhiteSpace((value as string)))
                 {
-                    if (!_validationErrors.Contains($"Field {propertyInfo.Name} is required."))
+                    if (!_validationErrors.Contains($"Field {propertyInfo.Name} is required"))
                     {
                         AddErrorFieldIsRequired(propertyInfo);
                     }
@@ -66,7 +66,7 @@ namespace FinanceManagerApi.Services
 
             if (value == null || string.IsNullOrWhiteSpace(value))
             {
-                if (!_validationErrors.Contains($"Field {propertyInfo.Name} is required."))
+                if (!_validationErrors.Contains($"Field {propertyInfo.Name} is required"))
                 {
                     AddErrorFieldIsRequired(propertyInfo);
                 }
@@ -89,7 +89,7 @@ namespace FinanceManagerApi.Services
             {
                 if (value == null || string.IsNullOrWhiteSpace(value))
                 {
-                    if (!_validationErrors.Contains($"Field {propertyInfo.Name} is required."))
+                    if (!_validationErrors.Contains($"Field {propertyInfo.Name} is required"))
                     {
                         AddErrorFieldIsRequired(propertyInfo);
                     }
@@ -110,17 +110,17 @@ namespace FinanceManagerApi.Services
 
         private void AddErrorFieldIsRequired(PropertyInfo propertyInfo)
         {
-            _validationErrors.Add($"Field {propertyInfo.Name} is required.");
+            _validationErrors.Add($"Field {propertyInfo.Name} is required");
         }
 
         private void AddErrorFieldHasMaxLength(PropertyInfo propertyInfo, int maxLength)
         {
-            _validationErrors.Add($"Field {propertyInfo.Name} has max length {maxLength} characters.");
+            _validationErrors.Add($"Field {propertyInfo.Name} has max length {maxLength} characters");
         }
 
         private void AddErrorFieldHasInvalidEmailFormat(PropertyInfo propertyInfo)
         {
-            _validationErrors.Add($"Field {propertyInfo.Name} requires correct email format.");
+            _validationErrors.Add($"Field {propertyInfo.Name} requires correct email format");
         }
     }
 }
