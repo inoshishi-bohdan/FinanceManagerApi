@@ -65,6 +65,7 @@ namespace FinanceManagerApi.Controllers
 
         [HttpPost("refreshToken")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(UnauthorizedDto))]
         public async Task<ActionResult<TokenResponseDto>> RefreshToken(RefreshTokenRequestDto request)
         {
