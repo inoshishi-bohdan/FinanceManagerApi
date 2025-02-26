@@ -16,6 +16,32 @@ namespace FinanceManagerApi.Controllers
     [Authorize]
     public class UserController(FinanceManagerDbContext dbContext, IUserService userService) : ControllerBase
     {
+        [HttpGet("getMyInfo")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(UnauthorizedDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDto))]
+        public async Task<ActionResult<UserDto>> GetMyInfo()
+        {
+            var myId = userService.GetMyId();
+
+            if (myId == null)
+            {
+                return Unauthorized(new UnauthorizedDto { Message = "Couldn't get user id from http context" });
+            }
+
+            var user = await dbContext.Users.AsQueryable().FirstOrDefaultAsync(x => x.Id == myId);
+
+            //check if user record exists
+            if (user == null)
+            {
+                return NotFound(new NotFoundDto { Message = $"User with ID {myId} was not found" });
+            }
+
+            var response = user.ToUserDto();
+            
+            return Ok(response);
+        }
+
         [HttpPut("updateMyInfo")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDto))]
@@ -63,7 +89,7 @@ namespace FinanceManagerApi.Controllers
             user.UserName = request.UserName!;
             user.Email = request.Email!;
             user.PasswordHash = new PasswordHasher<User>().HashPassword(user, request.NewPassword!);
-            user.ProfileImageId = request.ProfileImageId;
+            user.ProfileImageId = (int)request.ProfileImageId!;
             user.RefreshToken = null;
             user.RefreshTokenExpiryTime = null;
 
