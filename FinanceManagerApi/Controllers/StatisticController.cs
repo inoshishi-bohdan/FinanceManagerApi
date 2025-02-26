@@ -85,7 +85,7 @@ namespace FinanceManagerApi.Controllers
                 return NotFound(new NotFoundDto { Message = $"User with ID {myId} was not found" });
             }
 
-            var response = await dbContext.Incomes.AsQueryable().Select(income => income.Date.Year).Distinct().OrderBy(year => year).ToListAsync();
+            var response = await dbContext.Incomes.AsQueryable().Where(income => income.UserId == myId).Select(income => income.Date.Year).Distinct().OrderBy(year => year).ToListAsync();
 
             return Ok(response);
         }
@@ -160,7 +160,7 @@ namespace FinanceManagerApi.Controllers
                 return NotFound(new NotFoundDto { Message = $"User with ID {myId} was not found" });
             }
 
-            var response = await dbContext.Expenses.AsQueryable().Select(expense => expense.Date.Year).Distinct().OrderBy(year => year).ToListAsync();
+            var response = await dbContext.Expenses.AsQueryable().Where(expense => expense.UserId == myId).Select(expense => expense.Date.Year).Distinct().OrderBy(year => year).ToListAsync();
 
             return Ok(response);
         }
