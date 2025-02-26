@@ -11,7 +11,6 @@ namespace FinanceManagerApi.Extensions
             {
                 UserName = entry.UserName,
                 Email = entry.Email,
-                Password = entry.PasswordHash,
                 ProfileImageId = entry.ProfileImageId
             };
         }
