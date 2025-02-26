@@ -22,33 +22,16 @@ namespace FinanceManagerApi.Controllers
             return Ok(response);
         }
 
-        [HttpGet("getMyProfileImage")]
+        [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(UnauthorizedDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDto))]
-        [Authorize]
-        public async Task<ActionResult<ProfileImageDto>> GetMyProfileImage()
+        public async Task<ActionResult<ProfileImageDto>> GetProfileImage(int id)
         {
-            var myId = userService.GetMyId();
-
-            if (myId == null)
-            {
-                return Unauthorized(new UnauthorizedDto { Message = "Couldn't get user id from http context" });
-            }
-
-            var user = await dbContext.Users.AsQueryable().FirstOrDefaultAsync(x => x.Id == myId);
-
-            //check if user record exists
-            if (user == null)
-            {
-                return NotFound(new NotFoundDto { Message = $"User with ID {myId} was not found" });
-            }
-
-            var profileImage = await dbContext.ProfileImages.FindAsync(user.ProfileImageId);
+            var profileImage = await dbContext.ProfileImages.FindAsync(id);
 
             if (profileImage == null)
             {
-                return NotFound(new NotFoundDto { Message = $"Profile image with ID {user.ProfileImageId} was not found" });
+                return NotFound(new NotFoundDto { Message = $"Profile image with ID {id} was not found" });
             }
 
             return Ok(profileImage.ToProfileImageDto());
