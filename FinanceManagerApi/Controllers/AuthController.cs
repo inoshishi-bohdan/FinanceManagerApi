@@ -3,14 +3,16 @@ using FinanceManagerApi.Models.Auth;
 using FinanceManagerApi.Models.Register;
 using FinanceManagerApi.Models.Response;
 using FinanceManagerApi.Models.User;
+using FinanceManagerApi.Services.AuthService;
 using FinanceManagerApi.Services.FieldValidationService;
+using FinanceManagerApi.Services.RegisterService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FinanceManagerApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController(IAuthService authService) : ControllerBase
+    public class AuthController(IAuthService authService, IRegisterService registerService) : ControllerBase
     {
         public static User user = new();
 
@@ -30,7 +32,7 @@ namespace FinanceManagerApi.Controllers
             //check if request parameters is not null or missing
             if (validator.Any()) return validator.BadRequest();
 
-            var user = await authService.RegisterAsync(request);
+            var user = await registerService.RegisterAsync(request);
 
             if (user == null)
             {
