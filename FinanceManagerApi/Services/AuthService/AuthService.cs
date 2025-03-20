@@ -1,8 +1,6 @@
 ﻿using FinanceManagerApi.Data;
 using FinanceManagerApi.Entities;
-using FinanceManagerApi.Extensions;
 using FinanceManagerApi.Models.Auth;
-using FinanceManagerApi.Models.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -10,13 +8,12 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.RegularExpressions;
 
-namespace FinanceManagerApi.Services
+namespace FinanceManagerApi.Services.AuthService
 {
     public class AuthService(FinanceManagerDbContext context) : IAuthService
     {
-        public async Task<TokenResponseDto?> LoginAsync(LoginRequestDto request)
+        public async Task<TokenResponse?> LoginAsync(LoginRequest request)
         {
             var user = await context.Users.AsQueryable().FirstOrDefaultAsync(user => user.Email == request.Email!.ToLower());
 
@@ -31,25 +28,6 @@ namespace FinanceManagerApi.Services
             }
 
             return await CreateTokenResponse(user); ;
-        }
-
-        public async Task<UserDto?> RegisterAsync(RegisterRequestDto request)
-        {
-            if (await context.Users.AsQueryable().AnyAsync(user => user.Email == request.Email!.ToLower()))
-            {
-                return null;
-            }
-
-            var user = new User();
-            var hashedPassword = new PasswordHasher<User>().HashPassword(user, request.Password!);
-            user.UserName = request.UserName!;
-            user.Email = request.Email!.ToLower();
-            user.PasswordHash = hashedPassword;
-            user.ProfileImageId = 1;
-            context.Users.Add(user);
-            await context.SaveChangesAsync();
-
-            return user.ToUserDto();
         }
 
         private string CreateToken(User user)
@@ -72,9 +50,9 @@ namespace FinanceManagerApi.Services
             return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
         }
 
-        private async Task<TokenResponseDto> CreateTokenResponse(User user)
+        private async Task<TokenResponse> CreateTokenResponse(User user)
         {
-            return new TokenResponseDto { AccessToken = CreateToken(user), RefreshToken = await GenerateAndSaveRefreshTokenAsync(user) };
+            return new TokenResponse { AccessToken = CreateToken(user), RefreshToken = await GenerateAndSaveRefreshTokenAsync(user) };
         }
 
         private string GenerateRefreshToken()
@@ -108,7 +86,7 @@ namespace FinanceManagerApi.Services
             return user;
         }
 
-        public async Task<TokenResponseDto?> RefreshTokensAsync(RefreshTokenRequestDto request)
+        public async Task<TokenResponse?> RefreshTokensAsync(RefreshTokenRequest request)
         {
             var user = await ValidateRefreshTokenAsync((int)request.UserId!, request.RefreshToken!);
 

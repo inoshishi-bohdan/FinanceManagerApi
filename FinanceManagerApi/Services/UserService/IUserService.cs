@@ -1,4 +1,4 @@
-﻿namespace FinanceManagerApi.Services
+﻿namespace FinanceManagerApi.Services.UserService
 {
     public interface IUserService
     {

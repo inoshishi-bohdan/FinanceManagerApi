@@ -3,7 +3,8 @@ using FinanceManagerApi.Entities;
 using FinanceManagerApi.Extensions;
 using FinanceManagerApi.Models.Income;
 using FinanceManagerApi.Models.Response;
-using FinanceManagerApi.Services;
+using FinanceManagerApi.Services.FieldValidationService;
+using FinanceManagerApi.Services.UserService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -49,9 +50,9 @@ namespace FinanceManagerApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(UnauthorizedDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDto))]
-        public async Task<ActionResult<IncomeDto>> CreateIncome(CreateIncomeRequestDto request)
+        public async Task<ActionResult<IncomeDto>> CreateIncome(CreateRequest request)
         {
-            var validator = FieldValidator.Create(request);
+            var validator = FieldValidationService.Create(request);
 
             validator
                 .FieldIsRequired(x => x.Title).FieldHasMaxLength(x => x.Title, 250)
@@ -128,9 +129,9 @@ namespace FinanceManagerApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(UnauthorizedDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDto))]
-        public async Task<ActionResult<IncomeDto>> UpdateIncome(int id, UpdateIncomeRequestDto request)
+        public async Task<ActionResult<IncomeDto>> UpdateIncome(int id, UpdateRequest request)
         {
-            var validator = FieldValidator.Create(request);
+            var validator = FieldValidationService.Create(request);
 
             validator
                 .FieldIsRequired(x => x.Title).FieldHasMaxLength(x => x.Title, 250)

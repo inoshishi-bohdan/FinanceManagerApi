@@ -1,6 +1,6 @@
 ﻿namespace FinanceManagerApi.Models.User
 {
-    public class UpdateUserRequestDto
+    public class UpdateRequest
     {
         public string? UserName { get; set; } 
         public string? Email { get; set; } 

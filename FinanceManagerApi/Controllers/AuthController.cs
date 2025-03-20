@@ -1,8 +1,9 @@
 ﻿using FinanceManagerApi.Entities;
 using FinanceManagerApi.Models.Auth;
+using FinanceManagerApi.Models.Register;
 using FinanceManagerApi.Models.Response;
 using FinanceManagerApi.Models.User;
-using FinanceManagerApi.Services;
+using FinanceManagerApi.Services.FieldValidationService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FinanceManagerApi.Controllers
@@ -17,9 +18,9 @@ namespace FinanceManagerApi.Controllers
         [HttpPost("register")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDto))]
-        public async Task<ActionResult<UserDto>> Register(RegisterRequestDto request)
+        public async Task<ActionResult<UserDto>> Register(RegisterRequest request)
         {
-            var validator = FieldValidator.Create(request);
+            var validator = FieldValidationService.Create(request);
 
             validator
                 .FieldIsRequired(x => x.UserName).FieldHasMaxLength(x => x.UserName, 100)
@@ -42,9 +43,9 @@ namespace FinanceManagerApi.Controllers
         [HttpPost("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDto))]
-        public async Task<ActionResult<TokenResponseDto>> Login(LoginRequestDto request)
+        public async Task<ActionResult<TokenResponse>> Login(LoginRequest request)
         {
-            var validator = FieldValidator.Create(request);
+            var validator = FieldValidationService.Create(request);
 
             validator
                 .FieldIsRequired(x => x.Email).FieldHasValidEmailFormat(x => x.Email)
@@ -67,9 +68,9 @@ namespace FinanceManagerApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(UnauthorizedDto))]
-        public async Task<ActionResult<TokenResponseDto>> RefreshToken(RefreshTokenRequestDto request)
+        public async Task<ActionResult<TokenResponse>> RefreshToken(RefreshTokenRequest request)
         {
-            var validator = FieldValidator.Create(request);
+            var validator = FieldValidationService.Create(request);
 
             validator
                 .FieldIsRequired(x => x.UserId)

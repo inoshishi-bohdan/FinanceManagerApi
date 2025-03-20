@@ -1,8 +1,8 @@
 ﻿namespace FinanceManagerApi.Models.Statistic
 {
-    public class GetDistributionRequestDto
+    public class GetStatisticRequest
     {
-        public int? Month { get; set; }
+        public int? CurrencyId { get; set; }
         public int? Year { get; set; }
     }
 }

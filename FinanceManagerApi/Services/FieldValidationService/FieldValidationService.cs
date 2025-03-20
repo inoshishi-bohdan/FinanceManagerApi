@@ -1,12 +1,13 @@
 ﻿using FinanceManagerApi.Models.Response;
+using FinanceManagerApi.Util;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace FinanceManagerApi.Services
+namespace FinanceManagerApi.Services.FieldValidationService
 {
-    public class FieldValidator
+    public class FieldValidationService
     {
         public static FieldValidator<TRequest> Create<TRequest>(TRequest request) where TRequest : class
         {
@@ -29,7 +30,7 @@ namespace FinanceManagerApi.Services
 
         public BadRequestObjectResult BadRequest()
         {
-            return new BadRequestObjectResult(new BadRequestDto { Message= "Missing parameters", Errors = _validationErrors });
+            return new BadRequestObjectResult(new BadRequestDto { Message = "Missing parameters", Errors = _validationErrors });
         }
 
 
@@ -40,7 +41,7 @@ namespace FinanceManagerApi.Services
 
             if (propertyInfo.PropertyType == typeof(string))
             {
-                if (value == null || string.IsNullOrWhiteSpace((value as string)))
+                if (value == null || string.IsNullOrWhiteSpace(value as string))
                 {
                     if (!_validationErrors.Contains($"Field {propertyInfo.Name} is required"))
                     {

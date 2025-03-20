@@ -3,7 +3,8 @@ using FinanceManagerApi.Entities;
 using FinanceManagerApi.Extensions;
 using FinanceManagerApi.Models.Response;
 using FinanceManagerApi.Models.User;
-using FinanceManagerApi.Services;
+using FinanceManagerApi.Services.FieldValidationService;
+using FinanceManagerApi.Services.UserService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -47,9 +48,9 @@ namespace FinanceManagerApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(UnauthorizedDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDto))]
-        public async Task<ActionResult<UserDto>> UpdateMyInfo(UpdateUserRequestDto request)
+        public async Task<ActionResult<UserDto>> UpdateMyInfo(UpdateRequest request)
         {
-            var validator = FieldValidator.Create(request);
+            var validator = FieldValidationService.Create(request);
 
             validator
                 .FieldIsRequired(x => x.UserName).FieldHasMaxLength(x => x.UserName, 100)

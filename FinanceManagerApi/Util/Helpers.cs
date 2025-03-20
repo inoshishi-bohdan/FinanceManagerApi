@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
 
-namespace FinanceManagerApi.Services
+namespace FinanceManagerApi.Util
 {
     public class Helpers
     {

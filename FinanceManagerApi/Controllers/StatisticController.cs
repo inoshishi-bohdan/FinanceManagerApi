@@ -3,7 +3,8 @@ using FinanceManagerApi.Enums;
 using FinanceManagerApi.Extensions;
 using FinanceManagerApi.Models.Response;
 using FinanceManagerApi.Models.Statistic;
-using FinanceManagerApi.Services;
+using FinanceManagerApi.Services.FieldValidationService;
+using FinanceManagerApi.Services.UserService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -20,9 +21,9 @@ namespace FinanceManagerApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(UnauthorizedDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDto))]
-        public async Task<ActionResult<List<StatisticItemDto>>> GetMyIncomeStatistic(GetStatisticRequestDto request)
+        public async Task<ActionResult<List<StatisticItemDto>>> GetMyIncomeStatistic(GetStatisticRequest request)
         {
-            var validator = FieldValidator.Create(request);
+            var validator = FieldValidationService.Create(request);
 
             validator
                 .FieldIsRequired(x => x.Year)
@@ -95,9 +96,9 @@ namespace FinanceManagerApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(UnauthorizedDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDto))]
-        public async Task<ActionResult<List<StatisticItemDto>>> GetMyExpenseStatistic(GetStatisticRequestDto request)
+        public async Task<ActionResult<List<StatisticItemDto>>> GetMyExpenseStatistic(GetStatisticRequest request)
         {
-            var validator = FieldValidator.Create(request);
+            var validator = FieldValidationService.Create(request);
 
             validator
                 .FieldIsRequired(x => x.Year)
@@ -170,9 +171,9 @@ namespace FinanceManagerApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(UnauthorizedDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDto))]
-        public async Task<ActionResult<List<StatisticItemDto>>> GetMyNetWorthStatistic(GetStatisticRequestDto request)
+        public async Task<ActionResult<List<StatisticItemDto>>> GetMyNetWorthStatistic(GetStatisticRequest request)
         {
-            var validator = FieldValidator.Create(request);
+            var validator = FieldValidationService.Create(request);
 
             validator
                 .FieldIsRequired(x => x.Year)
@@ -231,9 +232,9 @@ namespace FinanceManagerApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(UnauthorizedDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDto))]
-        public async Task<ActionResult<List<DistributionItemDto>>> GetMyIncomeDistribution(GetDistributionRequestDto request)
+        public async Task<ActionResult<List<DistributionItemDto>>> GetMyIncomeDistribution(GetDistributionRequest request)
         {
-            var validator = FieldValidator.Create(request);
+            var validator = FieldValidationService.Create(request);
 
             validator
                 .FieldIsRequired(x => x.Year)
@@ -265,9 +266,9 @@ namespace FinanceManagerApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(UnauthorizedDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDto))]
-        public async Task<ActionResult<List<DistributionItemDto>>> GetMyExpenseDistribution(GetDistributionRequestDto request)
+        public async Task<ActionResult<List<DistributionItemDto>>> GetMyExpenseDistribution(GetDistributionRequest request)
         {
-            var validator = FieldValidator.Create(request);
+            var validator = FieldValidationService.Create(request);
 
             validator
                 .FieldIsRequired(x => x.Year)

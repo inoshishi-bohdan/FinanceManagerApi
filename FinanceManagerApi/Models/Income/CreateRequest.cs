@@ -1,6 +1,6 @@
 ﻿namespace FinanceManagerApi.Models.Income
 {
-    public class CreateIncomeRequestDto
+    public class CreateRequest
     {
         public string? Title { get; set; }
         public DateOnly? Date { get; set; }

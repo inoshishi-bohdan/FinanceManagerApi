@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace FinanceManagerApi.Services
+namespace FinanceManagerApi.Services.UserService
 {
     public class UserService : IUserService
     {
@@ -14,7 +14,7 @@ namespace FinanceManagerApi.Services
         {
             var claimValue = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if (claimValue == null || !Int32.TryParse(claimValue, out int result))
+            if (claimValue == null || !int.TryParse(claimValue, out int result))
             {
                 return null;
             }

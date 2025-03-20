@@ -2,7 +2,7 @@
 using FinanceManagerApi.Extensions;
 using FinanceManagerApi.Models.ProfileImage;
 using FinanceManagerApi.Models.Response;
-using FinanceManagerApi.Services;
+using FinanceManagerApi.Services.UserService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
