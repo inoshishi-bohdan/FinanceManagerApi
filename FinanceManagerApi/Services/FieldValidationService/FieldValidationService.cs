@@ -15,18 +15,11 @@ namespace FinanceManagerApi.Services.FieldValidationService
         }
     }
 
-    public class FieldValidator<TSource> where TSource : class
+    public class FieldValidator<TSource>(TSource request) where TSource : class
     {
-        private readonly TSource _request;
+        private readonly List<string> _validationErrors = [];
 
-        public FieldValidator(TSource request)
-        {
-            _request = request;
-        }
-
-        private readonly List<string> _validationErrors = new();
-
-        public bool Any() => _validationErrors.Any();
+        public bool Any() => _validationErrors.Count != 0;
 
         public BadRequestObjectResult BadRequest()
         {
@@ -36,7 +29,7 @@ namespace FinanceManagerApi.Services.FieldValidationService
 
         public FieldValidator<TSource> FieldIsRequired<TValue>(Expression<Func<TSource, TValue?>> propertySelector)
         {
-            var value = propertySelector.Compile().Invoke(_request);
+            var value = propertySelector.Compile().Invoke(request);
             var propertyInfo = Helpers.GetPropertyInfo(propertySelector);
 
             if (propertyInfo.PropertyType == typeof(string))
@@ -62,7 +55,7 @@ namespace FinanceManagerApi.Services.FieldValidationService
 
         public FieldValidator<TSource> FieldHasMaxLength(Expression<Func<TSource, string?>> propertySelector, int maxLength)
         {
-            var value = propertySelector.Compile().Invoke(_request);
+            var value = propertySelector.Compile().Invoke(request);
             var propertyInfo = Helpers.GetPropertyInfo(propertySelector);
 
             if (value == null || string.IsNullOrWhiteSpace(value))
@@ -82,7 +75,7 @@ namespace FinanceManagerApi.Services.FieldValidationService
 
         public FieldValidator<TSource> FieldHasValidEmailFormat(Expression<Func<TSource, string?>> propertySelector)
         {
-            var value = propertySelector.Compile().Invoke(_request);
+            var value = propertySelector.Compile().Invoke(request);
             var propertyInfo = Helpers.GetPropertyInfo(propertySelector);
             string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
 
