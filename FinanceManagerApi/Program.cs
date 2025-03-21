@@ -28,6 +28,7 @@ builder.Services.AddSwaggerGen(options =>
 });
 builder.Services.AddOpenApi();
 builder.Services.AddDbContext<FinanceManagerDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("FinanceManagerConnectionString")));
+builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRegisterService, RegisterService>();
