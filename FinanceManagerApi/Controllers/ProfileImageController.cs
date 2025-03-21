@@ -1,4 +1,5 @@
-﻿using FinanceManagerApi.Data;
+﻿using AutoMapper;
+using FinanceManagerApi.Data;
 using FinanceManagerApi.Extensions;
 using FinanceManagerApi.Models.ProfileImage;
 using FinanceManagerApi.Models.Response;
@@ -11,13 +12,14 @@ namespace FinanceManagerApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProfileImageController(FinanceManagerDbContext dbContext, IUserService userService) : ControllerBase
+    public class ProfileImageController(FinanceManagerDbContext dbContext, IMapper mapper) : ControllerBase
     {
         [HttpGet("getList")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<List<ProfileImageDto>>> GetAllProfileImages()
         {
-            var response = await dbContext.ProfileImages.ToProfileImageDtoListAsync();
+            var profileImages = await dbContext.ProfileImages.ToListAsync();
+            var response = mapper.Map<List<ProfileImageDto>>(profileImages);
 
             return Ok(response);
         }
@@ -34,7 +36,9 @@ namespace FinanceManagerApi.Controllers
                 return NotFound(new NotFoundDto { Message = $"Profile image with ID {id} was not found" });
             }
 
-            return Ok(profileImage.ToProfileImageDto());
+            var response = mapper.Map<ProfileImageDto>(profileImage);
+
+            return Ok(response);
         }
     }
 }
