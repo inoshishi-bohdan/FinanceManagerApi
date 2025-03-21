@@ -14,9 +14,6 @@ namespace FinanceManagerApi.Controllers
     [ApiController]
     public class AuthController(IAuthService authService, IRegisterService registerService) : ControllerBase
     {
-        public static User user = new();
-
-
         [HttpPost("register")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDto))]
@@ -36,7 +33,7 @@ namespace FinanceManagerApi.Controllers
 
             if (user == null)
             {
-                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = new List<string> { "Email already exists" } });
+                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = ["Email already exists"] });
             }
 
             return Ok(user);
@@ -60,7 +57,7 @@ namespace FinanceManagerApi.Controllers
 
             if (response == null)
             {
-                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = new List<string> { "Invalid email or password" } });
+                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = ["Invalid email or password"] });
             }
 
             return Ok(response);
