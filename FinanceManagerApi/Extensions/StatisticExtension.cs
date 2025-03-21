@@ -174,7 +174,7 @@ namespace FinanceManagerApi.Extensions
         public static async Task<List<DistributionItemDto>> ToDistributionDataAsync(this IQueryable<Income> incomes)
         {
             var result = await incomes
-                .GroupBy(income => income.IncomeCategoryId, (key, g) => new DistributionItemDto { CategoryName = ((IncomeCategories)key).GetDisplayAsOrName(), RecordCount = g.Count() })
+                .GroupBy(income => income.IncomeCategoryId, (key, g) => new DistributionItemDto { CategoryName = ((IncomeCategories)key).GetDisplayName(), RecordCount = g.Count() })
                 .ToListAsync();
             
             return result;
@@ -183,7 +183,7 @@ namespace FinanceManagerApi.Extensions
         public static async Task<List<DistributionItemDto>> ToDistributionDataAsync(this IQueryable<Expense> expenses)
         {
             var result = await expenses
-                .GroupBy(expense => expense.ExpenseCategoryId, (key, g) => new DistributionItemDto { CategoryName = ((ExpenseCategories)key).GetDisplayAsOrName(), RecordCount = g.Count() })
+                .GroupBy(expense => expense.ExpenseCategoryId, (key, g) => new DistributionItemDto { CategoryName = ((ExpenseCategories)key).GetDisplayName(), RecordCount = g.Count() })
                 .ToListAsync();
 
             return result;
