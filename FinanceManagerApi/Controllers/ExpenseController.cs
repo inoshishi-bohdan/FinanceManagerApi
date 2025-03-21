@@ -1,4 +1,5 @@
-﻿using FinanceManagerApi.Data;
+﻿using AutoMapper;
+using FinanceManagerApi.Data;
 using FinanceManagerApi.Entities;
 using FinanceManagerApi.Extensions;
 using FinanceManagerApi.Models.Expense;
@@ -14,7 +15,7 @@ namespace FinanceManagerApi.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class ExpenseController(IUserService userService, FinanceManagerDbContext dbContext) : ControllerBase
+    public class ExpenseController(IUserService userService, FinanceManagerDbContext dbContext, IMapper mapper) : ControllerBase
     {
         [HttpGet("getMyExpenses")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -35,12 +36,13 @@ namespace FinanceManagerApi.Controllers
                 return NotFound(new NotFoundDto { Message = $"User with ID {myId} was not found" });
             }
 
-            var response = await dbContext.Expenses
+            var expenses = await dbContext.Expenses
                 .AsQueryable()
                 .Include(expense => expense.Currency)
                 .Include(expense => expense.ExpenseCategory)
                 .Where(expense => expense.UserId == myId)
-                .ToExpenseDtoListAsync();
+                .ToListAsync();
+            var response = mapper.Map<List<ExpenseDto>>(expenses);
 
             return Ok(response);
         }
@@ -50,7 +52,7 @@ namespace FinanceManagerApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(UnauthorizedDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDto))]
-        public async Task<ActionResult<ExpenseDto>> CreateExpense(CreateRequest request)
+        public async Task<ActionResult<ExpenseDto>> CreateExpense(CreateExpenseRequest request)
         {
             var validator = FieldValidationService.Create(request);
 
@@ -121,7 +123,9 @@ namespace FinanceManagerApi.Controllers
                 return BadRequest(new BadRequestDto { Message = "Missing record", Errors = new List<string> { $"Expense record with ID {newExpense.Id} was not found" } });
             }
 
-            return Ok(entry.ToExpenseDto());
+            var response = mapper.Map<ExpenseDto>(entry);
+
+            return Ok(response);
         }
 
         [HttpPut("update/{id:int}")]
@@ -203,7 +207,10 @@ namespace FinanceManagerApi.Controllers
                 return BadRequest(new BadRequestDto { Message = "Missing record", Errors = new List<string> { $"Expense record with ID {id} was not found" } });
             }
 
-            return Ok(entry.ToExpenseDto());
+            var response = mapper.Map<ExpenseDto>(entry);
+
+
+            return Ok(response);
         }
 
         [HttpDelete("delete/{id:int}")]
