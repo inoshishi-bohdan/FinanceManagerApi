@@ -48,7 +48,7 @@ namespace FinanceManagerApi.Controllers
             //check if specified currency is valid
             if (!dbContext.Currencies.Any(currency => currency.Id == request.CurrencyId))
             {
-                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = new List<string> { $"Currency with ID {request.CurrencyId} was not found" } });
+                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = [$"Currency with ID {request.CurrencyId} was not found"] });
             }
 
             var selectedCurrency = (Currencies)request.CurrencyId!;
@@ -123,7 +123,7 @@ namespace FinanceManagerApi.Controllers
             //check if specified currency is valid
             if (!dbContext.Currencies.Any(currency => currency.Id == request.CurrencyId))
             {
-                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = new List<string> { $"Currency with ID {request.CurrencyId} was not found" } });
+                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = [$"Currency with ID {request.CurrencyId} was not found"] });
             }
 
             var selectedCurrency = (Currencies)request.CurrencyId!;
@@ -198,7 +198,7 @@ namespace FinanceManagerApi.Controllers
             //check if specified currency is valid
             if (!dbContext.Currencies.Any(currency => currency.Id == request.CurrencyId))
             {
-                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = new List<string> { $"Currency with ID {request.CurrencyId} was not found" } });
+                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = [$"Currency with ID {request.CurrencyId} was not found"] });
             }
 
             var selectedCurrency = (Currencies)request.CurrencyId!;
