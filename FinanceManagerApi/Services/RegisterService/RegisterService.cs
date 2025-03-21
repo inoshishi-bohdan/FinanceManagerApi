@@ -1,4 +1,5 @@
-﻿using FinanceManagerApi.Data;
+﻿using AutoMapper;
+using FinanceManagerApi.Data;
 using FinanceManagerApi.Entities;
 using FinanceManagerApi.Extensions;
 using FinanceManagerApi.Models.Register;
@@ -8,11 +9,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManagerApi.Services.RegisterService
 {
-    public class RegisterService(FinanceManagerDbContext context) : IRegisterService
+    public class RegisterService(FinanceManagerDbContext context, IMapper mapper) : IRegisterService
     {
         public async Task<UserDto?> RegisterAsync(RegisterRequest request)
         {
-            if (await context.Users.AsQueryable().AnyAsync(user => user.Email == request.Email!.ToLower()))
+            if (await context.Users.AsQueryable().AnyAsync(user => user.Email.Equals(request.Email, StringComparison.InvariantCultureIgnoreCase)))
             {
                 return null;
             }
@@ -26,7 +27,7 @@ namespace FinanceManagerApi.Services.RegisterService
             context.Users.Add(user);
             await context.SaveChangesAsync();
 
-            return user.ToUserDto();
+            return mapper.Map<UserDto>(user);
         }
     }
 }
