@@ -1,4 +1,5 @@
-﻿using FinanceManagerApi.Data;
+﻿using AutoMapper;
+using FinanceManagerApi.Data;
 using FinanceManagerApi.Entities;
 using FinanceManagerApi.Extensions;
 using FinanceManagerApi.Models.Response;
@@ -15,7 +16,7 @@ namespace FinanceManagerApi.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class UserController(FinanceManagerDbContext dbContext, IUserService userService) : ControllerBase
+    public class UserController(FinanceManagerDbContext dbContext, IUserService userService, IMapper mapper) : ControllerBase
     {
         [HttpGet("getMyInfo")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -38,7 +39,7 @@ namespace FinanceManagerApi.Controllers
                 return NotFound(new NotFoundDto { Message = $"User with ID {myId} was not found" });
             }
 
-            var response = user.ToUserDto();
+            var response = mapper.Map<UserDto>(user);
             
             return Ok(response);
         }
@@ -79,12 +80,12 @@ namespace FinanceManagerApi.Controllers
 
             if (new PasswordHasher<User>().VerifyHashedPassword(user, user.PasswordHash, request.OldPassword!) == PasswordVerificationResult.Failed)
             {
-                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = new List<string> { $"Invalid password" } });
+                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = [$"Invalid password"] });
             }
 
             if (!dbContext.ProfileImages.Any(profileImage => profileImage.Id == request.ProfileImageId))
             {
-                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = new List<string> { $"Profile image with ID {request.ProfileImageId} was not found" } });
+                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = [$"Profile image with ID {request.ProfileImageId} was not found"] });
             }
 
             user.UserName = request.UserName!;
@@ -96,7 +97,9 @@ namespace FinanceManagerApi.Controllers
 
             await dbContext.SaveChangesAsync();
 
-            return Ok(user.ToUserDto());
+            var response = mapper.Map<UserDto>(user);
+
+            return Ok(response);
         }
 
         [HttpDelete("deleteMyAccount")]
