@@ -8,14 +8,14 @@ namespace FinanceManagerApi.Extensions
 {
     public static class StatisticExtension
     {
-        private static decimal EURToUSDRate = 1.06m;
-        private static decimal USDToEURRate = 0.94m;
+        private static readonly decimal EURToUSDRate = 1.06m;
+        private static readonly decimal USDToEURRate = 0.94m;
 
         public static async Task<List<StatisticItemDto>> ToEURStatisticDataAsync(this IQueryable<Income> incomes)
         {
             var transformedIncomes = await incomes.Select(income => new
             {
-                Month = income.Date.Month,
+                income.Date.Month,
                 Amount = (Currencies)income.CurrencyId == Currencies.USD ? Math.Round(income.Amount * USDToEURRate, 2) : income.Amount
             }).ToListAsync();
 
@@ -28,18 +28,18 @@ namespace FinanceManagerApi.Extensions
 
             var result = new List<StatisticItemDto>
             {
-                new StatisticItemDto { Month = "Jan", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Feb", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Mar", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Apr", TotalAmount = 0 },
-                new StatisticItemDto { Month = "May", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Jun", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Jul", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Aug", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Sep", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Oct", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Nov", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Dec", TotalAmount = 0 },
+                new() { Month = "Jan", TotalAmount = 0 },
+                new() { Month = "Feb", TotalAmount = 0 },
+                new() { Month = "Mar", TotalAmount = 0 },
+                new() { Month = "Apr", TotalAmount = 0 },
+                new() { Month = "May", TotalAmount = 0 },
+                new() { Month = "Jun", TotalAmount = 0 },
+                new() { Month = "Jul", TotalAmount = 0 },
+                new() { Month = "Aug", TotalAmount = 0 },
+                new() { Month = "Sep", TotalAmount = 0 },
+                new() { Month = "Oct", TotalAmount = 0 },
+                new() { Month = "Nov", TotalAmount = 0 },
+                new() { Month = "Dec", TotalAmount = 0 },
             };
 
             foreach (var monthIncome in monthIncomes)
@@ -55,7 +55,7 @@ namespace FinanceManagerApi.Extensions
         {
             var transformedIncomes = await incomes.Select(income => new
             {
-                Month = income.Date.Month,
+                income.Date.Month,
                 Amount = (Currencies)income.CurrencyId == Currencies.EUR ? Math.Round(income.Amount * EURToUSDRate, 2) : income.Amount
             }).ToListAsync();
 
@@ -68,18 +68,18 @@ namespace FinanceManagerApi.Extensions
 
             var result = new List<StatisticItemDto>
             {
-                new StatisticItemDto { Month = "Jan", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Feb", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Mar", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Apr", TotalAmount = 0 },
-                new StatisticItemDto { Month = "May", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Jun", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Jul", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Aug", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Sep", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Oct", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Nov", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Dec", TotalAmount = 0 },
+                new() { Month = "Jan", TotalAmount = 0 },
+                new() { Month = "Feb", TotalAmount = 0 },
+                new() { Month = "Mar", TotalAmount = 0 },
+                new() { Month = "Apr", TotalAmount = 0 },
+                new() { Month = "May", TotalAmount = 0 },
+                new() { Month = "Jun", TotalAmount = 0 },
+                new() { Month = "Jul", TotalAmount = 0 },
+                new() { Month = "Aug", TotalAmount = 0 },
+                new() { Month = "Sep", TotalAmount = 0 },
+                new() { Month = "Oct", TotalAmount = 0 },
+                new() { Month = "Nov", TotalAmount = 0 },
+                new() { Month = "Dec", TotalAmount = 0 },
             };
 
             foreach (var monthIncome in monthIncomes)
@@ -95,7 +95,7 @@ namespace FinanceManagerApi.Extensions
         {
             var transformedExpenses = await expenses.Select(expense => new
             {
-                Month = expense.Date.Month,
+                expense.Date.Month,
                 Amount = (Currencies)expense.CurrencyId == Currencies.USD ? Math.Round(expense.Amount * USDToEURRate, 2) : expense.Amount
             }).ToListAsync();
 
@@ -108,18 +108,18 @@ namespace FinanceManagerApi.Extensions
 
             var result = new List<StatisticItemDto>
             {
-                new StatisticItemDto { Month = "Jan", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Feb", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Mar", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Apr", TotalAmount = 0 },
-                new StatisticItemDto { Month = "May", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Jun", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Jul", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Aug", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Sep", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Oct", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Nov", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Dec", TotalAmount = 0 },
+                new() { Month = "Jan", TotalAmount = 0 },
+                new() { Month = "Feb", TotalAmount = 0 },
+                new() { Month = "Mar", TotalAmount = 0 },
+                new() { Month = "Apr", TotalAmount = 0 },
+                new() { Month = "May", TotalAmount = 0 },
+                new() { Month = "Jun", TotalAmount = 0 },
+                new() { Month = "Jul", TotalAmount = 0 },
+                new() { Month = "Aug", TotalAmount = 0 },
+                new() { Month = "Sep", TotalAmount = 0 },
+                new() { Month = "Oct", TotalAmount = 0 },
+                new() { Month = "Nov", TotalAmount = 0 },
+                new() { Month = "Dec", TotalAmount = 0 },
             };
 
             foreach (var monthExpense in monthExpenses)
@@ -135,7 +135,7 @@ namespace FinanceManagerApi.Extensions
         {
             var transformedExpenses = await expenses.Select(expense => new
             {
-                Month = expense.Date.Month,
+                expense.Date.Month,
                 Amount = (Currencies)expense.CurrencyId == Currencies.EUR ? Math.Round(expense.Amount * EURToUSDRate, 2) : expense.Amount
             }).ToListAsync();
 
@@ -148,18 +148,18 @@ namespace FinanceManagerApi.Extensions
 
             var result = new List<StatisticItemDto>
             {
-                new StatisticItemDto { Month = "Jan", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Feb", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Mar", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Apr", TotalAmount = 0 },
-                new StatisticItemDto { Month = "May", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Jun", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Jul", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Aug", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Sep", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Oct", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Nov", TotalAmount = 0 },
-                new StatisticItemDto { Month = "Dec", TotalAmount = 0 },
+                new() { Month = "Jan", TotalAmount = 0 },
+                new() { Month = "Feb", TotalAmount = 0 },
+                new() { Month = "Mar", TotalAmount = 0 },
+                new() { Month = "Apr", TotalAmount = 0 },
+                new() { Month = "May", TotalAmount = 0 },
+                new() { Month = "Jun", TotalAmount = 0 },
+                new() { Month = "Jul", TotalAmount = 0 },
+                new() { Month = "Aug", TotalAmount = 0 },
+                new() { Month = "Sep", TotalAmount = 0 },
+                new() { Month = "Oct", TotalAmount = 0 },
+                new() { Month = "Nov", TotalAmount = 0 },
+                new() { Month = "Dec", TotalAmount = 0 },
             };
 
             foreach (var monthExpense in monthExpenses)
