@@ -1,6 +1,6 @@
 ﻿namespace FinanceManagerApi.Models.Expense
 {
-    public class UpdateRequest
+    public class UpdateExpenseRequest
     {
         public string? Title { get; set; }
         public DateOnly? Date { get; set; }

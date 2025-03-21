@@ -50,7 +50,7 @@ namespace FinanceManagerApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(UnauthorizedDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDto))]
-        public async Task<ActionResult<IncomeDto>> CreateIncome(CreateRequest request)
+        public async Task<ActionResult<IncomeDto>> CreateIncome(CreateIncomeRequest request)
         {
             var validator = FieldValidationService.Create(request);
 
@@ -129,7 +129,7 @@ namespace FinanceManagerApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(UnauthorizedDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDto))]
-        public async Task<ActionResult<IncomeDto>> UpdateIncome(int id, UpdateRequest request)
+        public async Task<ActionResult<IncomeDto>> UpdateIncome(int id, UpdateIncomeRequest request)
         {
             var validator = FieldValidationService.Create(request);
 

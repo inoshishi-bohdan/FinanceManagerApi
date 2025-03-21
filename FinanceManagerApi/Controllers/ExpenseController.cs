@@ -129,7 +129,7 @@ namespace FinanceManagerApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(UnauthorizedDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDto))]
-        public async Task<ActionResult<ExpenseDto>> UpdateExpense(int id, UpdateRequest request)
+        public async Task<ActionResult<ExpenseDto>> UpdateExpense(int id, UpdateExpenseRequest request)
         {
             var validator = FieldValidationService.Create(request);
 
