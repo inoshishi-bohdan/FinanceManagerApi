@@ -1,4 +1,4 @@
-﻿using FinanceManager.Util;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace FinanceManagerApi.Enums
 {
@@ -6,11 +6,11 @@ namespace FinanceManagerApi.Enums
     {
         Salary = 1,
         Investments = 2,
-        [DisplayAs("Business Income")]
+        [Display(Name = "Business Income")]
         BusinessIncome = 3,
-        [DisplayAs("Rental Income")]
+        [Display(Name = "Rental Income")]
         RentalIncome = 4,
-        [DisplayAs("Other Income")]
+        [Display(Name = "Other Income")]
         OtherIncome = 5,
     }
 }
