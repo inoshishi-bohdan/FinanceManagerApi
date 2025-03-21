@@ -1,6 +1,6 @@
 ﻿namespace FinanceManagerApi.Models.Expense
 {
-    public class CreateRequest
+    public class CreateExpenseRequest
     {
         public string? Title { get; set; }
         public DateOnly? Date { get; set; }
