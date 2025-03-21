@@ -82,19 +82,19 @@ namespace FinanceManagerApi.Controllers
             //check if specified currency is valid
             if (!dbContext.Currencies.Any(currency => currency.Id == request.CurrencyId))
             {
-                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = new List<string> { $"Currency with ID {request.CurrencyId} was not found" } });
+                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = [$"Currency with ID {request.CurrencyId} was not found"] });
             }
 
             //check if specified expense category is valid 
             if (!dbContext.ExpenseCategories.Any(category => category.Id == request.ExpenseCategoryId))
             {
-                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = new List<string> { $"Expense category with ID {request.ExpenseCategoryId} was not found" } });
+                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = [$"Expense category with ID {request.ExpenseCategoryId} was not found"] });
             }
 
             //check if amount is not negative number
             if (request.Amount <= 0)
             {
-                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = new List<string> { "Amount can not be less of equal to 0" } });
+                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = ["Amount can not be less of equal to 0"] });
             }
 
             var amount = Math.Round((decimal)request.Amount!, 2, MidpointRounding.AwayFromZero);
@@ -120,7 +120,7 @@ namespace FinanceManagerApi.Controllers
 
             if (entry == null)
             {
-                return BadRequest(new BadRequestDto { Message = "Missing record", Errors = new List<string> { $"Expense record with ID {newExpense.Id} was not found" } });
+                return BadRequest(new BadRequestDto { Message = "Missing record", Errors = [$"Expense record with ID {newExpense.Id} was not found"] });
             }
 
             var response = mapper.Map<ExpenseDto>(entry);
@@ -163,19 +163,19 @@ namespace FinanceManagerApi.Controllers
             //check if specified currency is valid
             if (!dbContext.Currencies.Any(currency => currency.Id == request.CurrencyId))
             {
-                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = new List<string> { $"Currency with ID {request.CurrencyId} was not found" } });
+                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = [$"Currency with ID {request.CurrencyId} was not found"] });
             }
 
             //check if specified expense category is valid 
             if (!dbContext.ExpenseCategories.Any(category => category.Id == request.ExpenseCategoryId))
             {
-                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = new List<string> { $"Expense category with ID {request.ExpenseCategoryId} was not found" } });
+                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = [$"Expense category with ID {request.ExpenseCategoryId} was not found"] });
             }
 
             //check if amount is not negative number
             if (request.Amount <= 0)
             {
-                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = new List<string> { "Amount can not be less of equal to 0" } });
+                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = ["Amount can not be less of equal to 0"] });
             }
 
             var amount = Math.Round((decimal)request.Amount!, 2, MidpointRounding.AwayFromZero);
@@ -185,7 +185,7 @@ namespace FinanceManagerApi.Controllers
 
             if (entry == null)
             {
-                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = new List<string> { $"Expense record with ID {id} was not found" } });
+                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = [$"Expense record with ID {id} was not found"] });
             }
 
             entry.Title = request.Title!;
@@ -204,7 +204,7 @@ namespace FinanceManagerApi.Controllers
 
             if (entry == null)
             {
-                return BadRequest(new BadRequestDto { Message = "Missing record", Errors = new List<string> { $"Expense record with ID {id} was not found" } });
+                return BadRequest(new BadRequestDto { Message = "Missing record", Errors = [$"Expense record with ID {id} was not found"] });
             }
 
             var response = mapper.Map<ExpenseDto>(entry);
@@ -239,7 +239,7 @@ namespace FinanceManagerApi.Controllers
 
             if (entry == null)
             {
-                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = new List<string> { $"Expense record with ID {id} was not found" } });
+                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = [$"Expense record with ID {id} was not found"] });
             }
 
             dbContext.Expenses.Remove(entry);
