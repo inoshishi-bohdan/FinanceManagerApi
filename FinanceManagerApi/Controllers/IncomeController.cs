@@ -1,4 +1,5 @@
-﻿using FinanceManagerApi.Data;
+﻿using AutoMapper;
+using FinanceManagerApi.Data;
 using FinanceManagerApi.Entities;
 using FinanceManagerApi.Extensions;
 using FinanceManagerApi.Models.Income;
@@ -14,7 +15,7 @@ namespace FinanceManagerApi.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class IncomeController(IUserService userService, FinanceManagerDbContext dbContext) : ControllerBase
+    public class IncomeController(IUserService userService, FinanceManagerDbContext dbContext, IMapper mapper) : ControllerBase
     {
         [HttpGet("getMyIncomes")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -35,12 +36,13 @@ namespace FinanceManagerApi.Controllers
                 return NotFound(new NotFoundDto { Message = $"User with ID {myId} was not found" });
             }
 
-            var response = await dbContext.Incomes
+            var incomes = await dbContext.Incomes
                 .AsQueryable()
                 .Include(income => income.Currency)
                 .Include(income => income.IncomeCategory)
                 .Where(income => income.UserId == myId)
-                .ToIncomeDtoListAsync();
+                .ToListAsync();
+            var response = mapper.Map<List<IncomeDto>>(incomes);
 
             return Ok(response);
         }
@@ -80,19 +82,19 @@ namespace FinanceManagerApi.Controllers
             //check if specified currency is valid
             if (!dbContext.Currencies.Any(currency => currency.Id == request.CurrencyId))
             {
-                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = new List<string> { $"Currency with ID {request.CurrencyId} was not found" } });
+                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = [$"Currency with ID {request.CurrencyId} was not found"] });
             }
 
             //check if specified income category is valid 
             if (!dbContext.IncomeCaregories.Any(category => category.Id == request.IncomeCategoryId))
             {
-                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = new List<string> { $"Income category with ID {request.IncomeCategoryId} was not found" } });
+                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = [$"Income category with ID {request.IncomeCategoryId} was not found"] });
             }
 
             //check if amount is not negative number
             if (request.Amount <= 0)
             {
-                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = new List<string> { "Amount can not be less of equal to 0" } });
+                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = ["Amount can not be less of equal to 0"] });
             }
 
             var amount = Math.Round((decimal)request.Amount!, 2, MidpointRounding.AwayFromZero);
@@ -118,10 +120,12 @@ namespace FinanceManagerApi.Controllers
 
             if (entry == null)
             {
-                return BadRequest(new BadRequestDto { Message = "Missing record", Errors = new List<string> { $"Income record with ID {newIncome.Id} was not found" } });
+                return BadRequest(new BadRequestDto { Message = "Missing record", Errors = [$"Income record with ID {newIncome.Id} was not found"] });
             }
 
-            return Ok(entry.ToIncomeDto());
+            var response = mapper.Map<IncomeDto>(entry);
+
+            return Ok(response);
         }
 
         [HttpPut("update/{id:int}")]
@@ -159,19 +163,19 @@ namespace FinanceManagerApi.Controllers
             //check if specified currency is valid
             if (!dbContext.Currencies.Any(currency => currency.Id == request.CurrencyId))
             {
-                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = new List<string> { $"Currency with ID {request.CurrencyId} was not found" } });
+                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = [$"Currency with ID {request.CurrencyId} was not found"] });
             }
 
             //check if specified income category is valid 
             if (!dbContext.IncomeCaregories.Any(category => category.Id == request.IncomeCategoryId))
             {
-                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = new List<string> { $"Income category with ID {request.IncomeCategoryId} was not found" } });
+                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = [$"Income category with ID {request.IncomeCategoryId} was not found"] });
             }
 
             //check if amount is not negative number
             if (request.Amount <= 0)
             {
-                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = new List<string> { "Amount can not be less of equal to 0" } });
+                return BadRequest(new BadRequestDto { Message = "Invalid request", Errors = ["Amount can not be less of equal to 0"] });
             }
 
             var amount = Math.Round((decimal)request.Amount!, 2, MidpointRounding.AwayFromZero);
@@ -181,7 +185,7 @@ namespace FinanceManagerApi.Controllers
 
             if (entry == null)
             {
-                return BadRequest(new BadRequestDto { Message = "Ivalid request", Errors = new List<string> { $"Income record with ID {id} was not found" } });
+                return BadRequest(new BadRequestDto { Message = "Ivalid request", Errors = [$"Income record with ID {id} was not found"] });
             }
 
             entry.Title = request.Title!;
@@ -200,10 +204,12 @@ namespace FinanceManagerApi.Controllers
 
             if (entry == null)
             {
-                return BadRequest(new BadRequestDto { Message = "Missing record", Errors = new List<string> { $"Income record with ID {id} was not found" } });
+                return BadRequest(new BadRequestDto { Message = "Missing record", Errors = [$"Income record with ID {id} was not found"] });
             }
 
-            return Ok(entry.ToIncomeDto());
+            var response = mapper.Map<IncomeDto>(entry);
+
+            return Ok(response);
         }
 
         [HttpDelete("delete/{id:int}")]
@@ -232,7 +238,7 @@ namespace FinanceManagerApi.Controllers
 
             if (entry == null)
             {
-                return BadRequest(new BadRequestDto { Message = "Ivalid request", Errors = new List<string> { $"Income record with ID {id} was not found" } });
+                return BadRequest(new BadRequestDto { Message = "Ivalid request", Errors = [$"Income record with ID {id} was not found"] });
             }
 
             dbContext.Incomes.Remove(entry);
